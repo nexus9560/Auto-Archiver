@@ -29,6 +29,7 @@
     <Compile Include="Auto_Archiver.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="requirements.txt" />
     <Content Include="run-archiver.bat" />
     <Content Include="run-archiver.sh" />
     <Content Include="settings.txt" />

@@ -361,5 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Auto-Archiver/AA-ENV/*
 /Auto-Archiver/settings.txt
 /Auto-Archiver/test file.txt
