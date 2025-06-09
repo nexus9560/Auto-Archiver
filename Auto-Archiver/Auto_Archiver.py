@@ -35,7 +35,10 @@ def main(args):
     else:
         sys.stdout.write(f"\x1b]2;{title_str}\x07")
     yt_dlp_handler()
-    lurker(args)
+    try:
+        lurker(args)
+    except KeyboardInterrupt:
+        print("Terminating process. Goodbye.")
     
 def clear_screen():
     # Clear the terminal screen in a cross-platform way
@@ -120,62 +123,62 @@ def lurker(channel):
     else:
         print(f"Save location does not exist: {save_location}")
     currVid = []
-    check_again_interval = [int(60), int(120), int(180), int(240), int(300), int(900), int(1800), int(3600)]
+    check_again_interval: list[int] = [60, 120, 180, 240, 300, 900, 1800, 3600]
     check_this_time = check_again_interval[random.randint(0, len(check_again_interval) - 1)]
     title = ""
+    last_check_time = None
+    next_check_time = None
     while 1:
         current_time = int(time.time())
             
         clear_screen()
             
-        if first_run or current_time % check_this_time == 0:
-            if not first_run:
-                check_this_time = check_again_interval[random.randint(0, len(check_again_interval) - 1)]
-            first_run = 0
-            gatVids = getVideoURL(channel)
-            is_multidimensional = (
-                isinstance(gatVids, list) and
-                len(gatVids) > 0 and
-                isinstance(gatVids[0], (list, tuple))
-            )
-            clear_screen()
-            if not len(gatVids) ==0:
-                if is_multidimensional:
-                    currVid = gatVids[0]
-                else:
-                    currVid = [gatVids[0], gatVids[1]]
-                fullURL = "https://youtube.com/watch?v="+currVid[0]
-                title = getVideoTitle(currVid[0])
-                print(fullURL)
-                if  checkTime(int(currVid[1])):
-                    print("The stream is live! Beginning archive...")
-                    arguments = yt_settings[1][1]
-                    match = re.search(r'\{(.*?)\}', yt_settings[1][1])
-                    if match:
-                        arguments = match.group(1).replace('"', '')
-                    else:
-                        arguments = ""
-                    #print(f"yt-dlp {fullURL} {arguments}")
-                    sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
-                    print("Stream archived. Waiting for next stream...")
+        last_check_time = time.time()
+        next_check_time = last_check_time + check_again_interval[random.randint(0, len(check_again_interval) - 1)]
+        gatVids = getVideoURL(channel)
+        is_multidimensional = (
+            isinstance(gatVids, list) and
+            len(gatVids) > 0 and
+            isinstance(gatVids[0], (list, tuple))
+        )
+        clear_screen()
+        if not len(gatVids) ==0:
+            if is_multidimensional:
+                currVid = gatVids[0]
             else:
-                print("No streams available to archive right now... going back to waiting...")
+                currVid = [gatVids[0], gatVids[1]]
+            fullURL = "https://youtube.com/watch?v="+currVid[0]
+            title = getVideoTitle(currVid[0])
+            print(fullURL)
+            if checkTime(int(currVid[1])):
+                print("The stream is live! Beginning archive...")
+                arguments = yt_settings[1][1]
+                match = re.search(r'\{(.*?)\}', yt_settings[1][1])
+                if match:
+                    arguments = match.group(1).replace('"', '')
+                else:
+                    arguments = ""
+                #print(f"yt-dlp {fullURL} {arguments}")
+                sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
+                print("Stream archived. Waiting for next stream...")
         else:
-            # Format current_time as a 10 minute countdown timer (MM:SS)
-            seconds_left = check_this_time - (current_time % check_this_time)
+            print("No streams available to archive right now... going back to waiting...")
+        
+        
+        # Format current_time as a 10 minute countdown timer (MM:SS)
+        seconds_left = int(next_check_time - time.time())
+        while seconds_left > 0:
             minutes = seconds_left // 60
             seconds = seconds_left % 60
             timer_str = f"{minutes:02d}:{seconds:02d}"
-            if len(title) > 0:
+            if title:
                 print(f"{title} is not live yet, checking again in {timer_str}")
             else:
                 print(f"There is no stream yet, checking again in {timer_str}")
-            print("Press 'q' to stop")
-        if keyboard.is_pressed('q') or keyboard.is_pressed('Q'):
-            print("Terminating process. Goodbye.")
-            exit()
-        else:
+            print("Press 'CTRL+C' to stop")
             time.sleep(1)
+            clear_screen()
+        
 
 def find_or_create_channel_folder(base_path, chaname):
     # Remove '@' characters from base_path if present
