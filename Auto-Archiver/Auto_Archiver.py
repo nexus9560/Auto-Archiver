@@ -12,12 +12,6 @@ import difflib
 # notes for future, if stream is not live but scheduled for a future time, this is the format:
 # "upcomingEventData":{"startTime":"[UNIX-TIME]","isReminderSet":false,"upcomingEventText":{"runs":[{"text":"Scheduled for "},{"text":"DATE_PLACEHOLDER"}]}}
 
-
-
-
-
-    
-
 def get_channel_name(url):
     # Extract channel name from URL (assumes last path segment is channel)
     parsed = urlparse(url)
@@ -27,7 +21,6 @@ def get_channel_name(url):
         return path_parts[-1]
     return "UnknownChannel"
 
-@staticmethod
 def main(args):
     if len(args) < 1:
         print("Usage: Auto_Archiver.py <URL>")
@@ -44,7 +37,6 @@ def main(args):
     yt_dlp_handler()
     lurker(args)
     
-@staticmethod
 def clear_screen():
     # Clear the terminal screen in a cross-platform way
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -84,7 +76,6 @@ def yt_dlp_handler():
     else:
         # Ensure yt-dlp is updated with admin privileges
         if sys.platform.startswith("win"):
-            # On Windows, use 'runas' to elevate
             sp.run('powershell -Command "Start-Process yt-dlp -ArgumentList \'-U\' -Verb RunAs"', shell=True)
         else:
             # On Unix-like systems, use sudo
@@ -186,14 +177,6 @@ def lurker(channel):
         else:
             time.sleep(1)
 
-
-
-# ... (rest of the class)
-        
-
-    # Inside the lurker method, after the while 1: line
-        
-@staticmethod
 def find_or_create_channel_folder(base_path, chaname):
     # Remove '@' characters from base_path if present
     bp = base_path.replace('@', '')
@@ -227,16 +210,9 @@ def getVideoTitle(vidID):
     title = title[0]
     print(title)
     return title
-            
-                
-                    
-
 
 def checkTime(t):
     return (int)(time.time()) >= t
-
-
-
        
 # returns live video, and if none is available, returns the next planned stream.
 def getVideoURL(args):
@@ -305,4 +281,5 @@ def getVideoURL(args):
         print(f"Error fetching URL: {e}")
     
 
-main(sys.argv[1:])
+if __name__ == "__main__":
+    main(sys.argv[1:])
