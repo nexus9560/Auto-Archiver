@@ -1,0 +1,2 @@
+archivelocation=F:\Video-Content\
+yt-dlp-Args-Default={"--live-from-start --wait-for-video 60-600"}

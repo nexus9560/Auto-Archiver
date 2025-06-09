@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36202.13 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Auto-Archiver", "Auto-Archiver\Auto-Archiver.pyproj", "{EDB3DBB7-BF38-44C3-A1F1-DA17EDD266EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDB3DBB7-BF38-44C3-A1F1-DA17EDD266EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB3DBB7-BF38-44C3-A1F1-DA17EDD266EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0EFE2587-6F79-4E56-9605-AD25AE6D7C38}
+	EndGlobalSection
+EndGlobal
