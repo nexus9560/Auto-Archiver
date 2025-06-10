@@ -21,7 +21,10 @@ def get_channel_name(url):
     return "UnknownChannel"
 
 def main(args):
-    if len(args) < 1:
+    if len(args) < 1 :
+        print("Usage: Auto_Archiver.py <URL>")
+        return
+    elif not "https://" in args:
         print("Usage: Auto_Archiver.py <URL>")
         return
     print("Starting Auto Archiver...")
@@ -144,7 +147,7 @@ def lurker(channel):
             isinstance(gatVids[0], (list, tuple))
         )
         clear_screen()
-        if not len(gatVids) ==0:
+        if not len(gatVids) == 0:
             if is_multidimensional:
                 currVid = gatVids[0]
             else:
