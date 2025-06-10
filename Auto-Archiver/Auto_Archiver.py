@@ -24,9 +24,11 @@ def main(args):
     if len(args) < 1 :
         print("Usage: Auto_Archiver.py <URL>")
         return
-    elif not "https://" in args:
-        print("Usage: Auto_Archiver.py <URL>")
-        return
+    else:
+        for x in args:
+            if not "https://" in x:
+                print("Usage: Auto_Archiver.py <URL>")
+                return
     print("Starting Auto Archiver...")
     #print(args)
     # Set console title
