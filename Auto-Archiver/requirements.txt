@@ -5,7 +5,6 @@ colorama==0.4.6
 dill==0.4.0
 idna==3.10
 isort==6.0.1
-keyboard==0.13.5
 mccabe==0.7.0
 pip==24.2
 platformdirs==4.3.8

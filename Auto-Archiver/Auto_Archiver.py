@@ -2,7 +2,6 @@ import random
 import re
 import os
 import sys
-import keyboard
 import subprocess as sp
 import time
 import requests
@@ -168,6 +167,7 @@ def lurker(channel):
         # Format current_time as a 10 minute countdown timer (MM:SS)
         seconds_left = int(next_check_time - time.time())
         while seconds_left > 0:
+            seconds_left = int(next_check_time - time.time())
             minutes = seconds_left // 60
             seconds = seconds_left % 60
             timer_str = f"{minutes:02d}:{seconds:02d}"
