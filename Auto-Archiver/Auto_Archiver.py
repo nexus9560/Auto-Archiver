@@ -127,9 +127,12 @@ def lurker(channel):
     title = ""
     last_check_time = None
     next_check_time = None
+    ytdlp_update_timer = 43200 + time.time()
     while 1:
         current_time = int(time.time())
-            
+        if current_time >= ytdlp_update_timer:
+            ytdlp_update_timer += 43200
+            yt_dlp_handler()
         clear_screen()
             
         last_check_time = time.time()
