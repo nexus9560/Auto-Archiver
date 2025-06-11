@@ -158,7 +158,7 @@ def lurker(channel):
             fullURL = "https://youtube.com/watch?v="+currVid[0]
             title = getVideoTitle(currVid[0])
             print(fullURL)
-            if checkTime(int(currVid[1])) or (title != previous_title):
+            if checkTime(int(currVid[1])) and (title != previous_title):
                 print("The stream is live! Beginning archive...")
                 arguments = yt_settings[1][1]
                 match = re.search(r'\{(.*?)\}', yt_settings[1][1])
