@@ -130,6 +130,7 @@ def lurker(channel):
     check_again_interval: list[int] = [60, 120, 180, 240, 300, 900, 1800, 3600]
     check_this_time = check_again_interval[random.randint(0, len(check_again_interval) - 1)]
     title = ""
+    previous_title = ""
     last_check_time = None
     next_check_time = None
     ytdlp_update_timer = 43200 + time.time()
@@ -157,7 +158,7 @@ def lurker(channel):
             fullURL = "https://youtube.com/watch?v="+currVid[0]
             title = getVideoTitle(currVid[0])
             print(fullURL)
-            if checkTime(int(currVid[1])):
+            if checkTime(int(currVid[1])) or (title != previous_title):
                 print("The stream is live! Beginning archive...")
                 arguments = yt_settings[1][1]
                 match = re.search(r'\{(.*?)\}', yt_settings[1][1])
@@ -168,6 +169,7 @@ def lurker(channel):
                 #print(f"yt-dlp {fullURL} {arguments}")
                 sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
                 print("Stream archived. Waiting for next stream...")
+                previous_title = title
         else:
             print("No streams available to archive right now... going back to waiting...")
         
@@ -179,7 +181,7 @@ def lurker(channel):
             minutes = seconds_left // 60
             seconds = seconds_left % 60
             timer_str = f"{minutes:02d}:{seconds:02d}"
-            if title:
+            if title and not (title is previous_title):
                 print(f"{title} is not live yet, checking again in {timer_str}")
             else:
                 print(f"There is no stream yet, checking again in {timer_str}")
