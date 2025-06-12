@@ -81,12 +81,8 @@ def yt_dlp_handler():
         except Exception as e:
             print(f"Failed to download yt-dlp: {e}")
     else:
-        # Ensure yt-dlp is updated with admin privileges
-        if sys.platform.startswith("win"):
-            sp.run('powershell -Command "Start-Process yt-dlp -ArgumentList \'-U\' -Verb RunAs"', shell=True)
-        else:
-            # On Unix-like systems, use sudo
-            sp.run("sudo yt-dlp -U", shell=True)
+        # Update yt-dlp without admin privileges
+        sp.run("yt-dlp -U", shell=True)
         print(f"yt-dlp version is up to date: {version}")
 
 def loadSettings():
