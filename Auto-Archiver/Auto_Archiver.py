@@ -153,19 +153,24 @@ def lurker(channel):
                 currVid = [gatVids[0], gatVids[1]]
             fullURL = "https://youtube.com/watch?v="+currVid[0]
             title = getVideoTitle(currVid[0])
+            next_vid_live = int(currVid[1])
+            result = str(sp.run("yt-dlp "+fullURL+" --print live_status",capture_output=True))
             print(fullURL)
-            if checkTime(int(currVid[1])) and (title != previous_title):
-                print("The stream is live! Beginning archive...")
-                arguments = yt_settings[1][1]
-                match = re.search(r'\{(.*?)\}', yt_settings[1][1])
-                if match:
-                    arguments = match.group(1).replace('"', '')
+            if checkTime(next_vid_live) and (title != previous_title):
+                if "not_live" in result:
+                    next_check_time = time.time() + 300
                 else:
-                    arguments = ""
-                #print(f"yt-dlp {fullURL} {arguments}")
-                sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
-                print("Stream archived. Waiting for next stream...")
-                previous_title = title
+                    print("The stream is live! Beginning archive...")
+                    arguments = yt_settings[1][1]
+                    match = re.search(r'\{(.*?)\}', yt_settings[1][1])
+                    if match:
+                        arguments = match.group(1).replace('"', '')
+                    else:
+                        arguments = ""
+                    #print(f"yt-dlp {fullURL} {arguments}")
+                    sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
+                    print("Stream archived. Waiting for next stream...")
+                    previous_title = title
         else:
             print("No streams available to archive right now... going back to waiting...")
         

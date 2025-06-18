@@ -13,7 +13,7 @@
     <RootNamespace>Auto-Archiver</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>https://www.youtube.com/@KirscheVerstahl</CommandLineArguments>
+    <CommandLineArguments>https://www.youtube.com/@PipkinPippa</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <InterpreterId>MSBuild|AA-ENV|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
