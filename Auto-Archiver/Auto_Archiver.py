@@ -157,7 +157,7 @@ def lurker(channel):
             result = str(sp.run("yt-dlp "+fullURL+" --print live_status",capture_output=True))
             print(fullURL)
             if checkTime(next_vid_live) and (title != previous_title):
-                if "not_live" in result:
+                if "not_live" in result or "This live event will begin in a few moments." in result:
                     next_check_time = time.time() + 300
                 else:
                     print("The stream is live! Beginning archive...")
