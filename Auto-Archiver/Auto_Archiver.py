@@ -82,8 +82,23 @@ def yt_dlp_handler():
             print(f"Failed to download yt-dlp: {e}")
     else:
         # Update yt-dlp without admin privileges
-        sp.run("yt-dlp -U", shell=True)
-        print(f"yt-dlp version is up to date: {version}")
+        update_result = sp.run("yt-dlp -U", shell=True)
+        if update_result.returncode != 0:
+            print("yt-dlp update failed. Attempting to update with administrator privileges...")
+            if sys.platform.startswith("win"):
+                # Windows: use runas to elevate
+                try:
+                    sp.run('powershell Start-Process "yt-dlp" \'-U\' -Verb RunAs', shell=True)
+                except Exception as e:
+                    print(f"Failed to update yt-dlp as administrator: {e}")
+            else:
+                # Unix-like: use sudo
+                try:
+                    sp.run("sudo yt-dlp -U", shell=True)
+                except Exception as e:
+                    print(f"Failed to update yt-dlp with sudo: {e}")
+        else:
+            print(f"yt-dlp version is up to date: {version}")
 
 def loadSettings():
     # Locate and read the contents of "settings.txt" in the current directory
