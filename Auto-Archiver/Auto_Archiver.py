@@ -138,22 +138,25 @@ def lurker(channel):
     else:
         print(f"Save location does not exist: {save_location}")
     currVid = []
-    check_again_interval: list[int] = [60, 120, 180, 240, 300, 900, 1800, 3600]
-    check_this_time = check_again_interval[random.randint(0, len(check_again_interval) - 1)]
+    upper_bound = 3600
+    lower_bound = 60
+    check_this_time = getRandomInterval(lower_bound, upper_bound)
     title = ""
     previous_title = ""
     last_check_time = None
     next_check_time = None
+    next_vid_live = None
+    past_start = False
     ytdlp_update_timer = 43200 + time.time()
     while 1:
-        current_time = int(time.time())
-        if current_time >= ytdlp_update_timer:
+        
+        last_check_time = int(time.time())
+        if last_check_time >= ytdlp_update_timer:
             ytdlp_update_timer += 43200
             yt_dlp_handler()
         clear_screen()
-            
-        last_check_time = time.time()
-        next_check_time = last_check_time + check_again_interval[random.randint(0, len(check_again_interval) - 1)]
+    
+        next_check_time = last_check_time + getRandomInterval(lower_bound, upper_bound)
         gatVids = getVideoURL(channel)
         is_multidimensional = (
             isinstance(gatVids, list) and
@@ -173,8 +176,10 @@ def lurker(channel):
             print(fullURL)
             if checkTime(next_vid_live) and (title != previous_title):
                 if "not_live" in result or "This live event will begin in a few moments." in result:
+                    past_start = True
                     next_check_time = time.time() + 300
                 else:
+                    past_start = False
                     print("The stream is live! Beginning archive...")
                     arguments = yt_settings[1][1]
                     match = re.search(r'\{(.*?)\}', yt_settings[1][1])
@@ -184,6 +189,7 @@ def lurker(channel):
                         arguments = ""
                     #print(f"yt-dlp {fullURL} {arguments}")
                     sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
+                    next_vid_live = None
                     print("Stream archived. Waiting for next stream...")
                     previous_title = title
         else:
@@ -191,6 +197,14 @@ def lurker(channel):
         
         
         # Format current_time as a 10 minute countdown timer (MM:SS)
+
+        if next_vid_live and not past_start:
+            if (next_vid_live - last_check_time) < upper_bound:
+                upper_bound = next_vid_live - last_check_time
+                if upper_bound < lower_bound:
+                    upper_bound = 0
+            next_check_time = last_check_time + getRandomInterval(lower_bound, upper_bound)
+
         seconds_left = int(next_check_time - time.time())
         while seconds_left > 0:
             seconds_left = int(next_check_time - time.time())
@@ -204,6 +218,12 @@ def lurker(channel):
             print("Press 'CTRL+C' to stop")
             time.sleep(1)
             clear_screen()
+
+def getRandomInterval(min_seconds, max_seconds):
+    if max_seconds < min_seconds:
+        return min_seconds
+    else:
+        return random.randint(min_seconds, max_seconds)
         
 
 def find_or_create_channel_folder(base_path, chaname):
