@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import random
 import re
 import os
@@ -190,6 +191,7 @@ def lurker(channel):
                     #print(f"yt-dlp {fullURL} {arguments}")
                     sp.run(f"yt-dlp {fullURL} {arguments}",shell=True,cwd=workingFolder)
                     next_vid_live = None
+                    upper_bound = 3600
                     print("Stream archived. Waiting for next stream...")
                     previous_title = title
         else:
