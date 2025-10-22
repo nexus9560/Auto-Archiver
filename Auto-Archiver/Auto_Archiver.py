@@ -9,6 +9,10 @@ import requests
 from urllib.parse import urlparse
 import difflib
 
+global console_title
+global previous_stream_file
+global workingFolder
+
 # notes for future, if stream is not live but scheduled for a future time, this is the format:
 # "upcomingEventData":{"startTime":"[UNIX-TIME]","isReminderSet":false,"upcomingEventText":{"runs":[{"text":"Scheduled for "},{"text":"DATE_PLACEHOLDER"}]}}
 
@@ -20,6 +24,14 @@ def get_channel_name(url):
     if path_parts:
         return path_parts[-1]
     return "UnknownChannel"
+
+def set_console_title(title):
+    console_title = title
+    if os.name == 'nt':
+        os.system(f'title {title}')
+    else:
+        sys.stdout.write(f"\x1b]2;{title}\x07")
+
 
 def main(args):
     if len(args) < 1 :
@@ -35,10 +47,7 @@ def main(args):
     # Set console title
     chaname = get_channel_name(args[0]) if args else "Anon's channel"
     title_str = f"Archiving {chaname}'s streams as they happen..."
-    if os.name == 'nt':
-        os.system(f'title {title_str}')
-    else:
-        sys.stdout.write(f"\x1b]2;{title_str}\x07")
+    set_console_title(title_str)
     yt_dlp_handler()
     try:
         lurker(args)
@@ -106,6 +115,7 @@ def loadSettings():
     settings_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.txt")
     if not os.path.isfile(settings_path):
         print(f"Settings file not found: {settings_path}")
+        print("Creating default settings file...")
         user_home = os.path.expanduser("~")
         default_archive_location = os.path.join(user_home, "Videos")
         with open(settings_path, "w", encoding="utf-8") as f:
